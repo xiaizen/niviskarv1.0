@@ -28,6 +28,17 @@ def extract_pdf_text(pdf_content):
 
 def fetch_open_edu_articles(limit=3):
     urls = [
+        "https://www.admissions.caltech.edu/apply/first-year-applicants/supplemental-application-essays/essay-writing-advice"
+        "https://www.admissions.caltech.edu/apply/first-year-applicants/supplemental-application-essays/essay-writing-advice"
+        "https://admissions.umich.edu/apply/first-year-applicants/essay-questions"
+        "https://engineering.tamu.edu/academics/undergraduate/entry-to-a-major/essays.html"
+       " https://stem.northeastern.edu/summer/ysp/app-questions/"
+        "https://spacegrant.carthage.edu/live/files/5570-next-step-workshop-example-statements-of-purpose"
+        "https://wac.colostate.edu/docs/books/writingspaces5/22Thaiss-Wade.pdf"
+        "https://pressbooks.ulib.csuohio.edu/understanding-literacy-in-our-lives/chapter/3-8-communication-and-writing-in-stem-synthesis/"
+        "https://guides.library.miami.edu/stemwritinghttps://apply.jhu.edu/college-planning-guide/essays-that-worked"
+        "https://digital.library.unt.edu/ark%3A/67531/metadc1610667/?utm_source=chatgpt.com"
+        "https://www.oercommons.org/courses/subjects/computer-science"
         "https://ocw.mit.edu/courses/find-by-topic/",
         "https://open.umn.edu/opentextbooks/subjects/computer-science-information-systems",
         "https://www.oercommons.org/courses/subjects/computer-science"
