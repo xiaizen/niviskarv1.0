@@ -5,11 +5,31 @@ import PyPDF2
 from urllib.parse import urljoin, urlparse
 import io
 
-ALLOWED_DOMAINS = ["ocw.mit.edu", "open.umn.edu", "oercommons.org"]
 ALLOWED_EXTENSIONS = ['.pdf', '.txt', '.html']
 
-def is_valid_domain(url):
-    return any(domain in url for domain in ALLOWED_DOMAINS)
+# List of Trusted Educational URLs
+URLS = [
+    "https://ocw.mit.edu/courses/find-by-topic/",
+    "https://open.umn.edu/opentextbooks/subjects/computer-science-information-systems",
+    "https://www.oercommons.org/courses/subjects/computer-science",
+    "https://pressbooks.ulib.csuohio.edu/understanding-literacy-in-our-lives/",
+    "https://guides.library.miami.edu/stemwriting",
+    "https://digital.library.unt.edu/ark:/67531/metadc1610667/",
+    "https://spacegrant.carthage.edu/live/files/5570-next-step-workshop-example-statements-of-purpose",
+    "https://wac.colostate.edu/books/writingspaces/",
+    "https://ocw.tufts.edu/Content/28/lecturenotes/273381",
+    "https://oer.galileo.usg.edu/compsci-textbooks/",
+    "https://learn.saylor.org/course/cs101",
+    "https://engineering.purdue.edu/Engr/Resources/Engineering-Projects-in-Community-Service-EPICS",
+    "https://global.oup.com/education/secondary/subjects/computing/",
+    "https://cs50.harvard.edu/x/",
+    "https://www.coursera.org/learn/python",
+    "https://er.educause.edu/online-books",
+    "https://www.edx.org/course/cs50s-introduction-to-computer-science",
+    "https://www.futurelearn.com/subjects/it-and-computer-science-courses",
+    "https://github.com/ossu/computer-science",
+    "https://www.khanacademy.org/computing/computer-science",
+]
 
 def extract_pdf_text(pdf_content):
     try:
@@ -24,18 +44,13 @@ def extract_pdf_text(pdf_content):
         print(f"❌ Error extracting PDF text: {e}")
         return None
 
-def fetch_open_edu_articles(limit=3):
-    urls = [
-        "https://wac.colostate.edu/docs/books/writingspaces5/22Thaiss-Wade.pdf",
-        "https://pressbooks.ulib.csuohio.edu/understanding-literacy-in-our-lives/chapter/3-8-communication-and-writing-in-stem-synthesis/",
-        "https://www.oercommons.org/courses/subjects/computer-science",
-        "https://ocw.mit.edu/courses/find-by-topic/",
-        "https://open.umn.edu/opentextbooks/subjects/computer-science-information-systems"
-    ]
-
+def fetch_open_edu_articles(urls=URLS, limit=3):
     saved = []
 
     for base_url in urls:
+        if len(saved) >= limit:
+            break
+
         try:
             print(f"🔍 Scanning {base_url}")
             res = requests.get(base_url, timeout=10)
@@ -45,13 +60,13 @@ def fetch_open_edu_articles(limit=3):
             count = 0
 
             for a in links:
-                if count >= limit:
+                if len(saved) >= limit:
                     break
 
                 href = a["href"]
                 full_url = urljoin(base_url, href)
 
-                if not is_valid_domain(full_url):
+                if not any(full_url.lower().endswith(ext) for ext in ALLOWED_EXTENSIONS):
                     continue
 
                 try:
@@ -66,7 +81,6 @@ def fetch_open_edu_articles(limit=3):
                                 with open(path, "w", encoding="utf-8") as f:
                                     f.write(content)
                                 saved.append(path)
-                                count += 1
                                 print(f"✅ Saved PDF content to {path}")
                     else:
                         page_response = requests.get(full_url, timeout=10)
@@ -80,7 +94,6 @@ def fetch_open_edu_articles(limit=3):
                                 with open(path, "w", encoding="utf-8") as f:
                                     f.write(content)
                                 saved.append(path)
-                                count += 1
                                 print(f"✅ Saved HTML content to {path}")
 
                 except Exception as e:
