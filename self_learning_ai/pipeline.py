@@ -7,17 +7,41 @@ from trainer import save_training_pair
 import os
 import time
 
+# Extended Trusted Educational URLs (20+ Links)
+URLS = [
+    "https://ocw.mit.edu/courses/find-by-topic/",
+    "https://open.umn.edu/opentextbooks/subjects/computer-science-information-systems",
+    "https://www.oercommons.org/courses/subjects/computer-science",
+    "https://pressbooks.ulib.csuohio.edu/understanding-literacy-in-our-lives/",
+    "https://guides.library.miami.edu/stemwriting",
+    "https://digital.library.unt.edu/ark:/67531/metadc1610667/",
+    "https://spacegrant.carthage.edu/live/files/5570-next-step-workshop-example-statements-of-purpose",
+    "https://wac.colostate.edu/books/writingspaces/",
+    "https://ocw.tufts.edu/Content/28/lecturenotes/273381",
+    "https://oer.galileo.usg.edu/compsci-textbooks/",
+    "https://learn.saylor.org/course/cs101",
+    "https://engineering.purdue.edu/Engr/Resources/Engineering-Projects-in-Community-Service-EPICS",
+    "https://global.oup.com/education/secondary/subjects/computing/",
+    "https://cs50.harvard.edu/x/",
+    "https://www.coursera.org/learn/python",
+    "https://er.educause.edu/online-books",
+    "https://www.edx.org/course/cs50s-introduction-to-computer-science",
+    "https://www.futurelearn.com/subjects/it-and-computer-science-courses",
+    "https://github.com/ossu/computer-science",
+    "https://www.khanacademy.org/computing/computer-science",
+]
+
 def run_pipeline():
     os.makedirs("data/raw", exist_ok=True)
     os.makedirs("data/summaries", exist_ok=True)
-    os.makedirs("data/fine_tune", exist_ok=True)  # <- fine_tune dir
+    os.makedirs("data/fine_tune", exist_ok=True)
 
     cycle = 1
     while True:
         print(f"\n🔁 Starting Self-Learning Cycle #{cycle}...")
 
-        print("🔍 Scanning open education sites...")
-        articles = fetch_open_edu_articles(limit=10)
+        print("🔍 Scanning trusted open education sites...")
+        articles = fetch_open_edu_articles(URLS, limit=10)
 
         if not articles:
             print("⚠️ No articles found in this cycle.")
@@ -32,7 +56,6 @@ def run_pipeline():
 
                 print(f"📝 Summary Preview (score={score}): {summary[:300]}...")
 
-                # Save summary regardless of score for testing
                 summary_path = os.path.join("data/summaries", f"summary_{cycle}_{i+1}.txt")
                 with open(summary_path, "w", encoding="utf-8") as f:
                     f.write(summary)
